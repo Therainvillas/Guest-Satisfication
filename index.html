@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Villa Guest Experience Survey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A96E;
+    --gold-light: #E8D5B0;
+    --gold-dark: #8B6914;
+    --deep: #1A1208;
+    --warm: #2D1F0A;
+    --cream: #FAF6EE;
+    --cream-dark: #F0E8D5;
+    --text: #3D2B0E;
+    --muted: #7A6040;
+    --green-ok: #4A7C59;
+    --border: rgba(201,169,110,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .bg-pattern {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(201,169,110,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 90%, rgba(201,169,110,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .page-wrap {
+    position: relative; z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .villa-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Jost', sans-serif;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+  .villa-badge::before, .villa-badge::after {
+    content: ''; display: block;
+    width: 24px; height: 1px; background: var(--gold);
+  }
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 300;
+    color: var(--deep);
+    line-height: 1.15;
+    margin-bottom: 0.6rem;
+  }
+  .header h1 em { font-style: italic; color: var(--gold-dark); }
+  .header p {
+    font-size: 14px; color: var(--muted);
+    font-weight: 300; letter-spacing: 0.5px;
+    max-width: 440px; margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* FORM CARD */
+  .form-card {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem 2.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-label {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.4rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* FIELD */
+  .field-group { margin-bottom: 1.4rem; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  
+  label {
+    display: block; font-size: 12px;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px; font-weight: 500;
+  }
+  
+  input[type="text"], input[type="email"], input[type="date"], select, textarea {
+    width: 100%;
+    padding: 11px 16px;
+    background: rgba(255,255,255,0.8);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px; color: var(--text);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  input[type="text"]:focus, input[type="email"]:focus,
+  input[type="date"]:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,169,110,0.12);
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A96E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px; cursor: pointer;
+  }
+  textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+  /* STAR RATING */
+  .rating-group { margin-bottom: 1.2rem; }
+  .rating-item {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(201,169,110,0.12);
+  }
+  .rating-item:last-child { border-bottom: none; }
+  .rating-label { font-size: 14px; color: var(--text); font-weight: 300; flex: 1; }
+  .stars { display: flex; gap: 4px; }
+  .star-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 22px; line-height: 1; padding: 2px;
+    color: var(--cream-dark);
+    transition: transform 0.15s, color 0.15s;
+  }
+  .star-btn:hover, .star-btn.active { color: var(--gold); }
+  .star-btn:hover { transform: scale(1.2); }
+
+  /* NPS */
+  .nps-wrap { margin-top: 0.5rem; }
+  .nps-scale {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .nps-btn {
+    flex: 1; min-width: 40px;
+    padding: 9px 4px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px; cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .nps-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .nps-btn.active {
+    background: var(--gold); border-color: var(--gold);
+    color: white; font-weight: 500;
+  }
+  .nps-labels {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--muted);
+    margin-top: 6px; letter-spacing: 0.3px;
+  }
+
+  /* CHECKBOX */
+  .checkbox-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; margin-top: 4px;
+  }
+  .check-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px; cursor: pointer;
+    transition: all 0.15s;
+    font-size: 13px; color: var(--muted);
+    user-select: none;
+  }
+  .check-item:hover { border-color: var(--gold); color: var(--text); }
+  .check-item input { display: none; }
+  .check-box {
+    width: 16px; height: 16px; border-radius: 4px;
+    border: 1px solid var(--gold-light);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.15s;
+    font-size: 10px; color: white;
+  }
+  .check-item.checked { border-color: var(--gold); background: rgba(201,169,110,0.06); color: var(--text); }
+  .check-item.checked .check-box { background: var(--gold); border-color: var(--gold); }
+
+  /* SUBMIT */
+  .submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--deep);
+    color: var(--gold-light);
+    border: 1px solid var(--gold-dark);
+    border-radius: 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 1rem;
+    position: relative; overflow: hidden;
+  }
+  .submit-btn:hover {
+    background: var(--warm);
+    box-shadow: 0 4px 20px rgba(201,169,110,0.2);
+    transform: translateY(-1px);
+  }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* SUCCESS */
+  .success-state {
+    display: none; text-align: center;
+    padding: 3rem 2rem;
+    animation: fadeIn 0.5s ease;
+  }
+  .success-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: rgba(74,124,89,0.1);
+    border: 2px solid var(--green-ok);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 28px;
+  }
+  .success-state h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; font-weight: 300;
+    color: var(--deep); margin-bottom: 0.5rem;
+  }
+  .success-state p { color: var(--muted); font-size: 14px; font-weight: 300; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .footer-note {
+    text-align: center; font-size: 12px; color: var(--muted);
+    margin-top: 2rem; letter-spacing: 0.3px; font-weight: 300;
+  }
+
+  /* Error */
+  .error-msg {
+    color: #C0392B; font-size: 12px; margin-top: 5px;
+    display: none;
+  }
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    background: #C0392B; color: white;
+    padding: 12px 24px; border-radius: 10px;
+    font-size: 13px; z-index: 999;
+    display: none; animation: fadeIn 0.3s ease;
+  }
+
+  .divider { height: 1.8rem; }
+
+  @media (max-width: 560px) {
+    .form-card { padding: 1.8rem 1.4rem; }
+    .field-row { grid-template-columns: 1fr; }
+    .checkbox-grid { grid-template-columns: 1fr; }
+    .nps-btn { min-width: 28px; font-size: 12px; padding: 8px 2px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-pattern"></div>
+
+<div class="page-wrap">
+  <div class="header">
+    <div class="villa-badge">Therainvillas</div>
+    <h1>Share Your <em>Journey</em><br>With Us</h1>
+    <p>Your candid feedback helps us craft more meaningful moments for every guest who follows.</p>
+  </div>
+
+  <div id="formSection">
+
+    <div class="form-card">
+      <div class="section-label">Informasi Tamu</div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Nama Lengkap *</label>
+          <input type="text" id="guestName" placeholder="Nama Anda" required>
+          <div class="error-msg" id="err-name">Nama wajib diisi</div>
+        </div>
+        <div class="field-group">
+          <label>Email</label>
+          <input type="email" id="guestEmail" placeholder="email@anda.com">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Nama Villa *</label>
+          <select id="villaName">
+            <option value="">Pilih Nama Villa</option>
+            <option value="4D">4D</option>
+            <option value="Agave">Agave</option>
+            <option value="Arisyfa">Arisyfa</option>
+            <option value="Albi">Albi</option>
+            <option value="Aleia">Aleia</option>
+            <option value="Awan">Awan</option>
+            <option value="Arsy">Arsy</option>
+            <option value="Baduo">Baduo</option>
+            <option value="Bodas">Bodas</option>
+            <option value="Calmora">Calmora</option>
+            <option value="Cempaka">Cempaka</option>
+            <option value="Cemara">Cemara</option>
+            <option value="Cyrena">Donkris</option>
+            <option value="De Summit">De Summit</option>
+            <option value="Echa">Echa</option>
+            <option value="Hala">Hala</option>
+            <option value="Jhonsky">Jhonsky</option>
+            <option value="Lembah Singgah">Lembah Singgah</option>
+            <option value="Thymi">Thymi</option>
+            <option value="The Helina">The Helina</option>
+            <option value="Twins">Twins</option>
+            <option value="Opung">Opung</option>
+            <option value="rayya">Rayya</option>
+            <option value="Ranna">Ranna</option>
+            <option value="Rjs Cottage">Rjs Cottage</option>
+            <option value="Rjs 2">Rjs 2</option>
+            <option value="Rjs 3">Rjs 3</option>
+            <option value="valora">valora</option>
+            <option value="wanela">wanela</option>
+          </select>
+          <div class="error-msg" id="err-villa">Nama Villa wajib dipilih</div>
+        </div>
+        <div class="field-group">
+          <label>Tanggal Check-out *</label>
+          <input type="date" id="checkoutDate">
+          <div class="error-msg" id="err-date">Tanggal wajib diisi</div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Durasi Menginap</label>
+          <select id="stayDuration">
+            <option value="">Pilih durasi</option>
+            <option>1 malam</option>
+            <option>2 malam</option>
+            <option>3 malam</option>
+            <option>4 malam</option>
+            <option>5 malam</option>
+            <option>6+ malam</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Tipe Kunjungan</label>
+          <select id="visitType">
+            <option value="">Pilih tipe</option>
+            <option>Bulan Madu / Romantis</option>
+            <option>Keluarga</option>
+            <option>Pasangan</option>
+            <option>Solo</option>
+            <option>Rombongan / Grup</option>
+            <option>Bisnis</option>
+            <option>Acara Sekolah</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="section-label">Penilaian Pengalaman</div>
+      <div class="rating-group" id="ratingsGroup">
+        <div class="rating-item">
+          <span class="rating-label">Kebersihan Kamar</span>
+          <div class="stars" data-key="cleanliness">
+            <button class="star-btn" data-val="1">★</button>
+            <button class="star-btn" data-val="2">★</button>
+            <button class="star-btn" data-val="3">★</button>
+            <button class="star-btn" data-val="4">★</button>
+            <button class="star-btn" data-val="5">★</button>
+          </div>
+        </div>
+        <div class="rating-item">
+          <span class="rating-label">Kualitas Sarapan / Makanan</span>
+          <div class="stars" data-key="food">
+            <button class="star-btn" data-val="1">★</button>
+            <button class="star-btn" data-val="2">★</button>
+            <button class="star-btn" data-val="3">★</button>
+            <button class="star-btn" data-val="4">★</button>
+            <button class="star-btn" data-val="5">★</button>
+          </div>
+        </div>
+        <div class="rating-item">
+          <span class="rating-label">Keramahan Staff</span>
+          <div class="stars" data-key="staff">
+            <button class="star-btn" data-val="1">★</button>
+            <button class="star-btn" data-val="2">★</button>
+            <button class="star-btn" data-val="3">★</button>
+            <button class="star-btn" data-val="4">★</button>
+            <button class="star-btn" data-val="5">★</button>
+          </div>
+        </div>
+        <div class="rating-item">
+          <span class="rating-label">Fasilitas & Amenitas</span>
+          <div class="stars" data-key="amenities">
+            <button class="star-btn" data-val="1">★</button>
+            <button class="star-btn" data-val="2">★</button>
+            <button class="star-btn" data-val="3">★</button>
+            <button class="star-btn" data-val="4">★</button>
+            <button class="star-btn" data-val="5">★</button>
+          </div>
+        </div>
+        <div class="rating-item">
+          <span class="rating-label">Nilai untuk Harga (Value)</span>
+          <div class="stars" data-key="value">
+            <button class="star-btn" data-val="1">★</button>
+            <button class="star-btn" data-val="2">★</button>
+            <button class="star-btn" data-val="3">★</button>
+            <button class="star-btn" data-val="4">★</button>
+            <button class="star-btn" data-val="5">★</button>
+          </div>
+        </div>
+        <div class="rating-item">
+          <span class="rating-label">Pengalaman Keseluruhan</span>
+          <div class="stars" data-key="overall">
+            <button class="star-btn" data-val="1">★</button>
+            <button class="star-btn" data-val="2">★</button>
+            <button class="star-btn" data-val="3">★</button>
+            <button class="star-btn" data-val="4">★</button>
+            <button class="star-btn" data-val="5">★</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="section-label">Rekomendasi</div>
+      <label style="margin-bottom: 10px;">Seberapa besar kemungkinan Anda merekomendasikan villa kami kepada teman atau keluarga?</label>
+      <div class="nps-wrap">
+        <div class="nps-scale" id="npsScale">
+          <button class="nps-btn" data-val="0">0</button>
+          <button class="nps-btn" data-val="1">1</button>
+          <button class="nps-btn" data-val="2">2</button>
+          <button class="nps-btn" data-val="3">3</button>
+          <button class="nps-btn" data-val="4">4</button>
+          <button class="nps-btn" data-val="5">5</button>
+          <button class="nps-btn" data-val="6">6</button>
+          <button class="nps-btn" data-val="7">7</button>
+          <button class="nps-btn" data-val="8">8</button>
+          <button class="nps-btn" data-val="9">9</button>
+          <button class="nps-btn" data-val="10">10</button>
+        </div>
+        <div class="nps-labels">
+          <span>Tidak mungkin</span>
+          <span>Sangat mungkin</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="section-label">Highlight & Saran</div>
+      <div class="field-group">
+        <label>Apa yang paling Anda sukai? (pilih semua yang sesuai)</label>
+        <div class="checkbox-grid" id="highlightGrid">
+          <label class="check-item"><input type="checkbox" value="Pemandangan Indah"> <div class="check-box">✓</div> Pemandangan Indah</label>
+          <label class="check-item"><input type="checkbox" value="Kolam Renang Privat"> <div class="check-box">✓</div> Kolam Renang Privat</label>
+          <label class="check-item"><input type="checkbox" value="Kamar yang Nyaman"> <div class="check-box">✓</div> Kamar yang Nyaman</label>
+          <label class="check-item"><input type="checkbox" value="Sarapan Lezat"> <div class="check-box">✓</div> Sarapan Lezat</label>
+          <label class="check-item"><input type="checkbox" value="Staff Ramah"> <div class="check-box">✓</div> Staff Ramah</label>
+          <label class="check-item"><input type="checkbox" value="Lokasi Strategis"> <div class="check-box">✓</div> Lokasi Strategis</label>
+          <label class="check-item"><input type="checkbox" value="Suasana Tenang"> <div class="check-box">✓</div> Suasana Tenang</label>
+          <label class="check-item"><input type="checkbox" value="Fasilitas Lengkap"> <div class="check-box">✓</div> Fasilitas Lengkap</label>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="field-group">
+        <label>Komentar & Saran untuk kami</label>
+        <textarea id="comments" placeholder="Ceritakan pengalaman Anda, hal yang ingin ditingkatkan, atau momen tak terlupakan selama menginap..."></textarea>
+      </div>
+      <div class="field-group">
+        <label>Apakah Anda berencana kembali?</label>
+        <select id="returnPlan">
+          <option value="">Pilih jawaban</option>
+          <option>Ya, pasti!</option>
+          <option>Kemungkinan ya</option>
+          <option>Belum tahu</option>
+          <option>Kemungkinan tidak</option>
+          <option>Tidak</option>
+        </select>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitForm()">
+        Kirim Ulasan Saya
+      </button>
+    </div>
+
+  </div>
+
+  <div class="success-state" id="successState">
+    <div class="success-icon">✦</div>
+    <h2>Terima Kasih, <span id="guestNameDisplay"></span></h2>
+    <p style="margin-bottom: 1rem;">Ulasan Anda telah kami terima dan sangat berarti bagi kami.</p>
+    <p>Kami berharap dapat menyambut Anda kembali suatu hari nanti.</p>
+  </div>
+
+  <p class="footer-note">Data Anda aman dan hanya digunakan untuk meningkatkan kualitas layanan kami.</p>
+</div>
+
+<div class="toast" id="toast">⚠ Gagal mengirim. Cek koneksi internet Anda.</div>
+
+<script>
+  // ========================================================
+  // KONFIGURASI — Pastikan URL Web App Apps Script Anda Benar
+  // ========================================================
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyknx0T_BwB5OPhlaNbQSC7DaDlz_IDTORk_4JpnRe__sfw5wPfE0QLRmhgrM7QIpas/exec";
+  // ========================================================
+
+  const ratings = {};
+  let npsScore = null;
+
+  // Set default checkout date to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('checkoutDate').value = today;
+  document.getElementById('checkoutDate').max = today;
+
+  // Star rating logic
+  document.querySelectorAll('.stars').forEach(group => {
+    const key = group.dataset.key;
+    const btns = group.querySelectorAll('.star-btn');
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = parseInt(btn.dataset.val);
+        ratings[key] = val;
+        btns.forEach(b => {
+          b.classList.toggle('active', parseInt(b.dataset.val) <= val);
+        });
+      });
+      btn.addEventListener('mouseover', () => {
+        const val = parseInt(btn.dataset.val);
+        btns.forEach(b => {
+          b.style.color = parseInt(b.dataset.val) <= val ? 'var(--gold)' : '';
+        });
+      });
+      btn.addEventListener('mouseout', () => {
+        const savedVal = ratings[key] || 0;
+        btns.forEach(b => {
+          b.style.color = parseInt(b.dataset.val) <= savedVal ? 'var(--gold)' : '';
+        });
+      });
+    });
+  });
+
+  // NPS logic
+  document.querySelectorAll('.nps-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      npsScore = parseInt(btn.dataset.val);
+      document.querySelectorAll('.nps-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Checkbox logic
+  document.querySelectorAll('.check-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const cb = item.querySelector('input[type="checkbox"]');
+      cb.checked = !cb.checked;
+      item.classList.toggle('checked', cb.checked);
+    });
+  });
+
+  // Toast helper
+  function showToast(msg, isError = true) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = isError ? '#C0392B' : 'var(--green-ok)';
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 4000);
+  }
+
+  function validate() {
+    let ok = true;
+    const name = document.getElementById('guestName').value.trim();
+    const villa = document.getElementById('villaName').value;
+    const date = document.getElementById('checkoutDate').value;
+
+    document.getElementById('err-name').style.style.display = name ? 'none' : 'block';
+    document.getElementById('err-villa').style.display = villa ? 'none' : 'block';
+    document.getElementById('err-date').style.display = date ? 'none' : 'block';
+    
+    if (!name || !villa || !date) ok = false;
+    return ok;
+  }
+
+  async function submitForm() {
+    try {
+      if (!validate()) { showToast('⚠ Lengkapi field yang wajib diisi (*)'); return; }
+    } catch(e) {
+      console.error(e);
+      // Fallback jika validasi bermasalah agar form tetap bisa terkirim
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Mengirim...';
+
+    const highlights = [...document.querySelectorAll('#highlightGrid input:checked')]
+      .map(cb => cb.value).join(', ');
+
+    const payload = {
+      timestamp: new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }),
+      guestName: document.getElementById('guestName').value.trim(),
+      guestEmail: document.getElementById('guestEmail').value.trim(),
+      checkoutDate: document.getElementById('checkoutDate').value,
+      villaName : document.getElementById('villaName').value,
+      stayDuration: document.getElementById('stayDuration').value,
+      visitType: document.getElementById('visitType').value,
+      rating_cleanliness: ratings.cleanliness || '',
+      rating_food: ratings.food || '',
+      rating_staff: ratings.staff || '',
+      rating_amenities: ratings.amenities || '',
+      rating_value: ratings.value || '',
+      rating_overall: ratings.overall || '',
+      nps: npsScore !== null ? npsScore : '',
+      highlights: highlights,
+      comments: document.getElementById('comments').value.trim(),
+      returnPlan: document.getElementById('returnPlan').value,
+    };
+
+    try {
+      const formData = new URLSearchParams();
+      Object.entries(payload).forEach(([k, v]) => formData.append(k, v));
+
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      });
+      showSuccessState(payload.guestName.split(' ')[0]);
+    } catch (err) {
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = 'Kirim Ulasan Saya';
+      showToast('⚠ Gagal terhubung ke server. Coba lagi.');
+    }
+  }
+
+  function showSuccessState(firstName) {
+    document.getElementById('formSection').style.display = 'none';
+    const s = document.getElementById('successState');
+    document.getElementById('guestNameDisplay').textContent = firstName || 'Tamu';
+    s.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
